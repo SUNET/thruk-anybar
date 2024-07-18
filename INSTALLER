@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+BASEDIR="${HOME}/.Anybar"
+mkdir -p "${BASEDIR}"
+cp thruk-anybar.py "${BASEDIR}/"
+
+OLD_PLIST="${HOME}/Library/LaunchAgents/thruk-anybar.plist"
+if [ -f "${OLD_PLIST}" ]; then
+   launchctl unload "${OLD_PLIST}"
+   rm "${OLD_PLIST}"
+fi
+NEW_PLIST="${HOME}/Library/LaunchAgents/se.sunet.thruk-anybar.plist"
+if launchctl list | grep -q se.sunet.thruk-anybar; then
+    launchctl unload "${NEW_PLIST}"
+fi
+sed "s/%%WHOAMI%%/$(whoami)/g" se.sunet.thruk-anybar.plist > "${NEW_PLIST}"
+launchctl load "${NEW_PLIST}"
+
+CONFIG_FILE="${BASEDIR}/thruk-anybar.toml"
+if [ ! -f "${CONFIG_FILE}" ]; then
+    echo "Boostraping example configuration (${CONFIG_FILE}) for editing"
+    cat <<EOF > "${CONFIG_FILE}"
+[example-site]
+baseurl = https://monitor.example.com
+key = "hunter2"
+port = 1738
+EOF
+fi
