@@ -23,6 +23,7 @@ brew install anybar
 
 ## Configuration
 Configuration is done via `~/.Anybar/thruk-anybar.toml`, a simple TOML file. Each site get it's own table. Increse port number for each site. The site name (table name) must be named as the icons.
+The API key can be created in Thruk under User Profile. E.g https://monitor.example.com/thruk/cgi-bin/user.cgi#apikeys
 ```
 [swamid]
 baseurl = "https://monitor.swamid.se"
