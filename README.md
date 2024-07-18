@@ -3,7 +3,7 @@ Show a general status from thruk in Anybar
 
 Patches are welcome!
 
-![Screenshot](https://github.com/SUNET/thruk-anybar/raw/master/sample/thruk-anybar.png)
+![Screenshot](https://raw.githubusercontent.com/SUNET/thruk-anybar/main/sample/thruk-anybar.png)
 
 
 ## Prerequisites
