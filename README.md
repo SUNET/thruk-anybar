@@ -1,5 +1,5 @@
 # thruk-anybar
-Show a general status from thruk in Anybar
+Show a general status from [Thruk](https://www.thruk.org) in [AnyBar](https://github.com/tonsky/AnyBar).
 
 Patches are welcome!
 
