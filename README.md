@@ -29,17 +29,17 @@ The API key can be created in Thruk under User Profile. E.g https://monitor.exam
 ```
 [swamid]
 baseurl = "https://monitor.swamid.se"
-key = "REDUCTED"
+key = "REDACTED"
 port = 1738
 
 [mastodon]
 baseurl = "https://monitor.social.sunet.se"
-key = "REDUCTED"
+key = "REDACTED"
 port = 1739
 
 [geteduroam]
 baseurl = "https://monitor.geteduroam.sunet.se"
-key = "REDUCTED"
+key = "REDACTED"
 port = 1740
 ```
 
