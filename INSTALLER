@@ -21,7 +21,7 @@ if [ ! -f "${CONFIG_FILE}" ]; then
     echo "Boostraping example configuration (${CONFIG_FILE}) for editing"
     cat <<EOF > "${CONFIG_FILE}"
 [example-site]
-baseurl = https://monitor.example.com
+baseurl = "https://monitor.example.com"
 key = "hunter2"
 port = 1738
 EOF
