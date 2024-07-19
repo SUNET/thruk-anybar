@@ -12,7 +12,7 @@ Patches are welcome!
 ```
 brew install anybar
 ```
-* Depending of python version you might need some modules (this is the system wide python)
+* The system wide python needs some modules
 ```
 /usr/bin/python3 -m pip install psutil toml requests
 ```
