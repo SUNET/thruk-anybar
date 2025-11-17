@@ -45,10 +45,10 @@ port = 1740
 
 ## Colors of icon
 
-|Color|Status|
+|Color|HEX|Status|
 | --- | --- |
-|Green|Everything is OK in the monitor|
-|Red|Attention is needed|
-|Yellow|`thruk-anybar.py` is in vacation mode|
-|Black|Connection error or not yet run|
-|Purple|thruk didn't respond with a proper json, server error?|
+|Green|#1eb100|Everything is OK in the monitor|
+|Red|#ed230d|Attention is needed|
+|Yellow|#f7ba00f7|`thruk-anybar.py` is in vacation mode|
+|Black|#000000|Connection error or not yet run|
+|Purple|#ca2a7a|thruk didn't respond with a proper json, server error?|
