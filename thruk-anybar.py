@@ -64,7 +64,7 @@ for site in config:
     }
 
     try:
-        r = requests.get(thrukurl, params=params, headers=headers, verbose=True)
+        r = requests.get(thrukurl, params=params, headers=headers)
     except requests.exceptions.RequestException:
         status_color = "black"
         write_to_socket(color=status_color, site=site, port=port)
