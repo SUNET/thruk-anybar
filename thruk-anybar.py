@@ -12,8 +12,8 @@ import toml
 
 
 def write_to_socket(*, host="127.0.0.1", color, site, port):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.sendto(bytes(f"{site}-{color}", "utf-8"), (host, port))
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+        sock.sendto(bytes(f"{site}-{color}", "utf-8"), (host, port))
 
 
 with open(f"{os.path.expanduser('~')}/.Anybar/thruk-anybar.toml", "r") as f:
@@ -22,13 +22,14 @@ with open(f"{os.path.expanduser('~')}/.Anybar/thruk-anybar.toml", "r") as f:
 
 opened_anybar_ports = []
 for proc in psutil.process_iter():
-    if proc.name() == "AnyBar":
-        process_id = proc.pid
-        p = psutil.Process(process_id)
-        for conn in p.net_connections(kind="udp"):
-            laddr = getattr(conn, "laddr")
-            lport = getattr(laddr, "port")
-            opened_anybar_ports.append(lport)
+    try:
+        if proc.name() == "AnyBar":
+            for conn in proc.net_connections(kind="udp"):
+                laddr = getattr(conn, "laddr")
+                lport = getattr(laddr, "port")
+                opened_anybar_ports.append(lport)
+    except (psutil.NoSuchProcess, psutil.AccessDenied):
+        continue
 
 
 for site in config:
