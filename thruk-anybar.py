@@ -72,8 +72,9 @@ for site in config:
         continue
 
     try:
+        r.raise_for_status()
         data = r.json()
-    except JSONDecodeError:
+    except (requests.exceptions.HTTPError, JSONDecodeError):
         status_color = "purple"
         write_to_socket(color=status_color, site=site, port=port)
         continue
