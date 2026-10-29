@@ -14,7 +14,7 @@ brew install anybar
 ```
 * The system wide python needs some modules
 ```
-/usr/bin/python3 -m pip install psutil toml requests
+/usr/bin/python3 -m pip install "psutil>=6" toml requests
 ```
 
 ## Installation
