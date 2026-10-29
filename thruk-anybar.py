@@ -18,6 +18,31 @@ def write_to_socket(*, host="127.0.0.1", color, site, port):
         sock.sendto(bytes(f"{site}-{color}", "utf-8"), (host, port))
 
 
+def anybar_ports():
+    """Return the UDP ports that running AnyBar instances listen on."""
+    ports = []
+    for proc in psutil.process_iter():
+        try:
+            if proc.name() == "AnyBar":
+                for conn in proc.net_connections(kind="udp"):
+                    laddr = getattr(conn, "laddr")
+                    lport = getattr(laddr, "port")
+                    ports.append(lport)
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+    return ports
+
+
+def wait_for_port(port, timeout=10):
+    """Poll until an AnyBar instance listens on port; return whether it does."""
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if port in anybar_ports():
+            return True
+        time.sleep(0.2)
+    return False
+
+
 def check_site(site, site_config, opened_anybar_ports):
     status_color = "red"
     baseurl = site_config["baseurl"]
@@ -32,8 +57,8 @@ def check_site(site, site_config, opened_anybar_ports):
             "ANYBAR_INIT": f"{site}-black",
         }
         subprocess.Popen(["open", "-g", "-n", "-a", "AnyBar"], env=env)
-        # XXX - Wait until port is open
-        time.sleep(1)
+        if not wait_for_port(port):
+            print(f"{site}: AnyBar did not open port {port}", file=sys.stderr)
 
     if os.path.exists("/tmp/awol"):
         status_color = "yellow"
@@ -79,16 +104,7 @@ def main():
     except (OSError, toml.TomlDecodeError) as e:
         sys.exit(f"Cannot read {config_path}: {e}")
 
-    opened_anybar_ports = []
-    for proc in psutil.process_iter():
-        try:
-            if proc.name() == "AnyBar":
-                for conn in proc.net_connections(kind="udp"):
-                    laddr = getattr(conn, "laddr")
-                    lport = getattr(laddr, "port")
-                    opened_anybar_ports.append(lport)
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            continue
+    opened_anybar_ports = anybar_ports()
 
     for site, site_config in config.items():
         try:
