@@ -2,6 +2,23 @@
 
 BASEDIR="${HOME}/.Anybar"
 mkdir -p "${BASEDIR}"
+
+# Apple's python3 is linked against LibreSSL without TLS 1.3, which servers
+# may require. Build a venv on a uv-managed standalone python (bundled OpenSSL,
+# pinned version) so Homebrew/system upgrades cannot break the job.
+PYTHON_VERSION="3.13"
+if ! command -v uv >/dev/null 2>&1; then
+    echo "uv not found; run: brew install uv (or see https://docs.astral.sh/uv/)" >&2
+    exit 1
+fi
+VENV="${BASEDIR}/venv"
+uv venv --quiet --clear --python "${PYTHON_VERSION}" "${VENV}" || exit 1
+PYTHON="${VENV}/bin/python3"
+uv pip install --quiet --python "${PYTHON}" "psutil>=6" toml requests || exit 1
+if ! "${PYTHON}" -c 'import ssl; assert ssl.HAS_TLSv1_3' 2>/dev/null; then
+    echo "${PYTHON} has no TLS 1.3 support" >&2
+    exit 1
+fi
 cp thruk-anybar.py "${BASEDIR}/"
 
 OLD_PLIST="${HOME}/Library/LaunchAgents/thruk-anybar.plist"
@@ -13,7 +30,7 @@ NEW_PLIST="${HOME}/Library/LaunchAgents/se.sunet.thruk-anybar.plist"
 if launchctl list | grep -q se.sunet.thruk-anybar; then
     launchctl unload "${NEW_PLIST}"
 fi
-sed "s/%%WHOAMI%%/$(whoami)/g" se.sunet.thruk-anybar.plist > "${NEW_PLIST}"
+sed -e "s/%%WHOAMI%%/$(whoami)/g" -e "s|%%PYTHON%%|${PYTHON}|g" se.sunet.thruk-anybar.plist > "${NEW_PLIST}"
 launchctl load "${NEW_PLIST}"
 
 CONFIG_FILE="${BASEDIR}/thruk-anybar.toml"

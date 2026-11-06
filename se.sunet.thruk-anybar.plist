@@ -6,6 +6,7 @@
     <string>se.sunet.thruk-anybar</string>
     <key>ProgramArguments</key>
     <array>
+        <string>%%PYTHON%%</string>
         <string>/Users/%%WHOAMI%%/.Anybar/thruk-anybar.py</string>
     </array>
     <key>RunAtLoad</key>

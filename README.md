@@ -12,9 +12,11 @@ Patches are welcome!
 ```
 brew install anybar
 ```
-* The system wide python needs some modules
+* Install [uv](https://docs.astral.sh/uv/). Apple's python3 has no TLS 1.3 support, so
+  `INSTALLER` uses uv to create a venv in `~/.Anybar/venv` on a standalone python
+  (version set by `PYTHON_VERSION` in `INSTALLER`) and installs the needed modules there
 ```
-/usr/bin/python3 -m pip install "psutil>=6" toml requests
+brew install uv
 ```
 
 ## Installation

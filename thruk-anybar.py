@@ -77,7 +77,12 @@ def check_site(site, site_config, opened_anybar_ports):
 
     try:
         r = requests.get(thrukurl, params=params, headers=headers, timeout=(5, 30))
-    except requests.exceptions.RequestException:
+    except requests.exceptions.RequestException as e:
+        print(
+            f"{site}: request to {thrukurl} failed "
+            f"({type(e).__name__}: {e}); python={sys.executable}",
+            file=sys.stderr,
+        )
         status_color = "black"
         write_to_socket(color=status_color, site=site, port=port)
         return
@@ -85,7 +90,11 @@ def check_site(site, site_config, opened_anybar_ports):
     try:
         r.raise_for_status()
         data = r.json()
-    except (requests.exceptions.HTTPError, JSONDecodeError):
+    except (requests.exceptions.HTTPError, JSONDecodeError) as e:
+        print(
+            f"{site}: bad response from {thrukurl} ({type(e).__name__}: {e})",
+            file=sys.stderr,
+        )
         status_color = "purple"
         write_to_socket(color=status_color, site=site, port=port)
         return
